@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       console.log('Attempting to register user:', userData.email);
-      const response = await axios.post('/users/register', userData);
+      const response = await axios.post('/users/register', userData, {withCredentials: true});
       const { token, user } = response.data;
       
       console.log('Registration successful, setting up authentication');
