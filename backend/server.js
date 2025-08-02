@@ -18,7 +18,7 @@ const app = express();
 
 // To avoid cors error
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://islamic-report-app-ftxa.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
