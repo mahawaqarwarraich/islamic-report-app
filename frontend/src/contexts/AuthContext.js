@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }) => {
   axios.defaults.withCredentials = true;
 
   // Set up axios defaults
-  axios.defaults.baseURL = 'https://report-backend-nu.vercel.app/';
-
+  axios.defaults.baseURL = 'https://report-backend-nu.vercel.app/api';
+3
   // Function to verify token with backend
   const verifyToken = async (token) => {
     try {
