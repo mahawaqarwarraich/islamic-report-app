@@ -15,12 +15,20 @@ dotenv.config();
 
 const app = express();
 
-// For production
-app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-});
+// To avoid cors error
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
+
+// For production
+// app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+// });
 
 // Middleware
 app.use(cors());
