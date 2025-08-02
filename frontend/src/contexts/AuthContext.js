@@ -14,7 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true; axios.defaults.withCredentials = true;
 
   // Set up axios defaults
   axios.defaults.baseURL = 'https://report-backend-nu.vercel.app/api';
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       console.log('Attempting to register user:', userData.email);
-      const response = await axios.post('/users/register', userData, {withCredentials: true});
+      const response = await axios.post('/users/register', userData);
       const { token, user } = response.data;
       
       console.log('Registration successful, setting up authentication');
