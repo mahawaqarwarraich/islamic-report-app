@@ -13,13 +13,30 @@ const path = require('path');
 // Load environment variables
 dotenv.config();
 
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const path = require('path');
+
+
+
+
+
+
+
+// Load environment variables
+dotenv.config();
+
 const app = express();
 
 
-// To avoid cors error
+// CORS configuration
 app.use(cors({
-  origin: 'https://islamic-report-app-ftxa.vercel.app',
-  credentials: true
+  origin: ['https://islamic-report-app-ftxa.vercel.app', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // For production
@@ -30,7 +47,6 @@ app.use(cors({
 // });
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
