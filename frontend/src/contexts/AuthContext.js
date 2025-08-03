@@ -14,10 +14,41 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  axios.defaults.withCredentials = true; axios.defaults.withCredentials = true;
-
-  // Set up axios defaults
+  
+  // Set up axios defaults with proper CORS configuration
   axios.defaults.baseURL = 'https://report-backend-nu.vercel.app/api';
+  axios.defaults.withCredentials = true;
+  axios.defaults.headers.common['Content-Type'] = 'application/json';
+  
+  // Add request interceptor for better error handling
+  axios.interceptors.request.use(
+    (config) => {
+      console.log('Making request to:', config.url);
+      return config;
+    },
+    (error) => {
+      console.error('Request error:', error);
+      return Promise.reject(error);
+    }
+  );
+  
+  // Add response interceptor for better error handling
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      console.error('Response error:', error.response?.status, error.response?.data);
+      if (error.response?.status === 401) {
+        // Handle unauthorized access
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        delete axios.defaults.headers.common['Authorization'];
+        setUser(null);
+      }
+      return Promise.reject(error);
+    }
+  );
 
   // Function to verify token with backend
   const verifyToken = async (token) => {

@@ -1,50 +1,28 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-
-
-
-
-
-
-
-// Load environment variables
-dotenv.config();
-
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const path = require('path');
-
-
-
-
-
-
+const { corsMiddleware, handlePreflight } = require('./middleware/cors');
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
+// Apply CORS middleware
+app.use(corsMiddleware);
+app.use(handlePreflight);
 
-// CORS configuration
-app.use(cors({
-  origin: ['https://islamic-report-app-ftxa.vercel.app', 'http://localhost:3000'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Handle preflight requests explicitly
+app.options('*', (req, res) => {
+  res.status(200).end();
+});
 
-// For production
-// app.use(express.static(path.join(__dirname, '../frontend/build')));
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-// });
+// Debug middleware for CORS issues
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Origin: ${req.headers.origin}`);
+  next();
+});
 
 // Middleware
 app.use(express.json());
@@ -67,6 +45,19 @@ app.use('/api/reports', reportRoutes);
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Islamic Report Management System API' });
+});
+
+// Health check endpoint for CORS testing
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    cors: {
+      origin: req.headers.origin,
+      method: req.method,
+      headers: req.headers
+    }
+  });
 });
 
 // Error handling middleware
